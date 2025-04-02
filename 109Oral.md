@@ -302,3 +302,257 @@ What will this code output and why? Explain how the key parameter works in Pytho
         - by default in ***ascending order***.
     2. `reverse=True` tells the function to sort the member elements in reverse order.
         - by ***descending order***.
+--------------------------------------------------------------------------------------------------------------
+
+2.  ​Intermediate​: Consider this code:
+```python
+   def remove_vowels(string):
+       result = ""
+       for char in string:
+           if char.lower() not in "aeiou":
+               result += char
+       return result
+
+   print(remove_vowels("LaunchSchool"))
+```
+What will this code output? Explain the string processing technique being used here and its efficiency.
+
+- `print(remove_vowels("LaunchSchool"))` outputs `LnchSchl`.
+    - the function `remove_vowels` is defined with one parameter `(string)`.
+    - the variable `result` is assigned to an empty string.
+    - `for char in string:` iterates of a sequence initializing the first character of that sequence to `char`.
+        - a conditional expression checks if the copy of `char` lowercased, returned by the `.lower()` method, is a member of `"aeiou"`, a string containing vowels, using the logical operator `not` and the membership operator `in`.
+            - if the conditional expression evaluates as ***truthy***, `result` is reassigned using ***augmented reassignment***, adding `char` to the string referenced by `result` and creating a new string object.
+    - the function returns the string value referenced by `result`.
+- Underlying concepts:
+    - strings are immutable objects.
+    - augmented reassignement
+    - checking for membership
+
+3.  ​Advanced​: Examine this code:
+```python
+   my_dict = {'a': 1, 'b': 2}
+
+   def modify_dict(d):
+       d['c'] = 3
+       d = {'new': 'dict'}
+       return d
+
+   result = modify_dict(my_dict)
+   print(my_dict)
+   print(result)
+```
+What will be printed? Explain how dictionary mutability and reassignment work in function parameters, and how this relates to pass-by-object-reference in Python.
+
+- `my_dict` is assigned to a dictionary object.
+- function analysis:
+    1. `modify_dict` uses 1 parameter `(d)`.
+    2. `d['c'] = 3` adds a key value pair to the dictionary object referenced by `d`.
+    3. `d = {'new': 'dict'}` the parameter `d` is reassigned to a new dictionary object.
+    4.  the function returns the value referenced by `d`.
+- `result = modify_dict(my_dict)`
+    - `modify_dict` is invoked and passed the value referenced by `my_dict` as an argument.
+    - when a function is called with an argument, the parameter inside the function definition becomes a reference to the same object that the argument is referencing.
+    - the return value of the function is assigned to `result`.
+- output:
+    - `print(my_dict)` outputs `{'a': 1, 'b': 2, 'c': 3}
+        - because dictionaries are ***mutable objects*** they are be modified in place.
+    - `print(result)` outputs `{'new': 'dict'}
+        - because `my_list` is reassigned in the local namespace and the the dictionary object it references is returned by the function.
+        - This reassignment is local to the function and doesn't affect what my_dict references in the global scope.
+
+-------------------------------------------------------------------------------------------------------------------------------
+2.  ​Intermediate​: Consider this code that uses a nested data structure:
+    ```python
+   contacts = {
+       'John': {'phone': '555-1234', 'email': 'john@example.com'},
+       'Mary': {'phone': '555-6789', 'email': 'mary@example.com'}
+   }
+
+   def update_contact(contacts_dict, name, field, value):
+       pass # write function definition here
+
+   update_contact(contacts, 'John', 'email', 'john.doe@example.com')
+   print(contacts['John']['email'])  # Should print: john.doe@example.com
+   ```
+Implement the update_contact function. Explain how nested dictionaries work in Python and how you would access and modify nested data.
+
+- To update dictionary we use ***key access syntax***.
+    - solution:
+        `contacts_dict[name][field] = value`
+    - the first key `name` accesses the nested dictionary.
+    - the second key `field` access the specific key within the nested dictionary.
+- because dictionaries are ***mutable objects*** when they are referenced by the argument passed into the function and when used in operations within the function, ***they are modified in place*** affecting the original object created in the global scope.
+
+
+3.  ​Advanced​: Describe Python's approach to error handling. Explain the try/except pattern, when you would use it, and provide an example of catching specific exceptions versus catching all exceptions. What are potential drawbacks of using a broad exception handler?
+
+- To gracefully handle exceptions, we can use a `try/except` block.
+    1.  ​Try block​: Contains code that might raise an exception
+    2.  ​Except block​: Catches and handles specific exceptions
+    3.  ​Else block​ (optional): Executes if no exceptions occur in the try block
+    4.  ​Finally block​ (optional): Always executes, regardless of exceptions.
+```python
+try:
+    num = int('abc')
+except ValueError:
+    print('Invalid argument')
+
+try:
+    num = int('abc')
+except Exception:
+    print('Something went wrong')
+```
+- The disadvantage of catching all exceptions:
+    1. treats different types of exceptions the same making it difficult to diagnose issues when they occur.
+    2. hides bugs that should be fixed rather than handled.
+--------------------------------------------------------------------------------------
+
+```python
+def process_string(input_string):
+    result = ""
+    for i in range(len(input_string)):
+        if i % 2 == 0:
+            result += input_string[i].upper()
+        else:
+            result += input_string[i].lower()
+    return result
+
+sample = "Python Programming"
+output = process_string(sample)
+print(output)
+```
+Explain the code, what it outputs and how immutable objects are reassigned
+
+- `sample` is assigned to a string value.
+- `process_string` is invoked and passed in the object referenced by `sample`.
+    - The return value of the function is assigned to the variable `output`.
+- function analysis:
+    1. the local variable `result` is assigned to an empty string.
+    2. a for loop initializes `i` to the first element of a ***range sequence*** and iterates through that ***range sequence***, beginning at 0 and stopping at the return value of the built-in function `len()` passed in the object referenced by `input_string`.
+        3. a conditional `if/else` block is executed at each iteration.
+            - `if i % 2 == 0:` checks if `i` is an ***even number*** and if the arithmetic expression evaluates to a ***truthy value***,
+            `result` is ***reassigned*** using ***augmented reassignment*** to a new object, ***concatenating*** `result` with the character at the index of `input_string` converted to upper case using the string method `.upper()`.
+            - the code within the `else` block is executed if the ***expression*** in the `if` statement is ***falsy***.
+                - `result` is reassigned to a new string object ***concatenating*** `result` with the character at the index of `input_string` converted to lower case using the string method `.lower()`.
+    4. the function returns `result`.
+- output:
+    - `print(output)` outputs `PyThOn pRoGrAmMiNg`
+        - All the characters at even indexes are upper case and odd are lower case.
+-Underlying concepts:
+    - string concatenation
+    - immutable objects are reassigned because they cannot be modified in place.
+
+3.  ​Advanced​: Examine this code involving default arguments:
+```python
+def add_item(item, shopping_list=[]):
+    shopping_list.append(item)
+    return shopping_list
+
+list1 = add_item('apple')
+list2 = add_item('banana')
+print(list1)
+print(list2)
+```
+What will be printed and why? Explain the concept of mutable default arguments in Python functions and how you would rewrite this function to avoid potential issues.
+
+- function analysis:
+    1. `add_item` accepts 2 parameters, `item` and a default parameter `shopping_list = []`.
+    2. `item` is appended to `shopping_list` using the list method .append().
+    3. the function returns the value referenced by `shopping_list`.
+- `add_item` is invoked and passed in the object referenced by the string value `apple`.
+    - the return value is assigned to the variable `list1`.
+- `add_item` is again invoked and passed in the object referenced by the string value `banana`.
+    = the return value is assigned to the variable `list2`.
+- output:
+    - `print(list1)` and `print(list2)` both output the same list object, `['apple', 'banana']`.
+        - because the value referenced by the default parameter is ***mutable*** it is modified in place and shared across multiple invocations.
+        - this is important to be aware of as this concept can lead to unexpected behaviour when using mutable objects as default parameters.
+        - a rewritten function to avoid such potential issues:
+        ```python
+        def add_item(item, shopping_list = None):
+            if shopping_list = None:
+                shopping_list = []
+            shopping_list.append(item)
+            return shopping_list
+        ```
+--------------------------------------------------------------------------------------------------------------------------------
+'''
+Identify all the identifiers in the following code snippet. For each identifier, categorize it as a function name, variable name, parameter name, or built-in function/method. Also note which ones follow Python naming conventions and which ones don't.
+'''
+```python
+def calculate_total(items_list, tax_rate):
+    SubTotal = 0 # sub_total
+
+    for item in items_list:
+        SubTotal += item
+
+    def apply_discount(amount, discount_percent):
+        return amount * (1 - discount_percent/100)
+
+    total = SubTotal * (1 + tax_rate)
+    if total > 100:
+        total = apply_discount(total, 10)
+
+    print(f"Your total is: ${total:.2f}")
+    return round(total, 2)
+
+my_items = [24.99, 19.95, 5.49]
+SALES_TAX = 0.08
+final_amount = calculate_total(my_items, SALES_TAX)
+```
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+Advanced​: Analyze the following code that combines variables, mutability, functions, and loops:
+```python
+def process_data(data, multiplier=2):
+    result = []
+    for item in data:
+        if isinstance(item, list):
+            new_item = process_data(item, multiplier + 1)
+            result.append(new_item)
+        else:
+            result.append(item * multiplier)
+    return result
+
+numbers = [1, 2, [3, 4], 5]
+output = process_data(numbers)
+print(numbers)
+print(output)
+```
+What will this code output? Explain your answer by discussing:
+
+- function analysis:
+    1. `process_data` accepts 2 parameters, `data` and a default parameter `multiplier = 2`.
+    2. `result` is assigned to an empty list.
+    3. a for loop is used to iterate through the sequence referenced by `data` initializing and assigning `item` to the first element of the sequence.
+        4. an `if/else` block within the for loop is a conditional that uses the built-in function `isinstance()` function to check if `item` is a list object.
+            - if the expression in the list statement returns `True` the code within the `if` block will execute.
+                1. `process_data` is invoked and passed in the object referenced by `item` and `multiplier + 1'.
+                    - The return value of the function is assigned to `new_item`.
+                2. `result.append(new_item)` appends `new_item` to the list object referenced by `result`.
+            - if the expression in the if statment returns `False` the code within the `else` block is executed:
+                1. `item * multiplier` is appended to the list object referenced by `result`.
+    4. The function returns the value referenced by `result`.
+- `numbers` is assigned to a list object containing integers and a nested list.
+- `process_data` is invoked and passed in the object referenced by `numbers`.
+- output:
+    - `print(numbers)` outputs `[1, 2, [3, 4], 5]`
+    - `print(output)` outputs `[2, 4, [9, 12], 10]`
+
+1.  How the recursive function works with nested data structures
+    - This is not included in the PY109 study guide but i believe the recursive function call within the function definition loops through the nested list and modifies the elements by executing the code within the else block (the default parameter now assigned to a new integer value (3)).
+2.  How the default parameter is used across recursive calls
+    - because the default parameter is a mutable object, when it is reassigned to a new integer object, upon the next recursive function invocation, the modification is forgotten and not shared.
+3.  The role of mutability in this example
+    - becaue `result` is assigned to a list, a mutable object, it is modified in place with each iteration of the for loop.
+4.  How Python handles the multiplication operation differently for numbers vs lists
+    - because integer values are immutable, when we attempt to modify them using arithmetic, a new object is created.
+    - but if we attempt to concatenate lists using, *, a new list object is also created.
